@@ -1,0 +1,74 @@
+import * as React from 'react';
+import { ActivityIndicator, Button, StyleSheet } from 'react-native';
+import * as GoogleSignIn from 'expo-google-sign-in';
+
+import { Text, View } from '../components/Themed';
+import { useNavigation } from '@react-navigation/native';
+import { TextInput } from 'react-native-gesture-handler';
+
+export default function CreateGameScreen() {
+  const navigation = useNavigation()
+  const [googleUser, setGoogleUser] = React.useState<GoogleSignIn.GoogleUser | null>(null)
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [roomName, setRoomName] = React.useState<string | undefined>(undefined)
+  const createRoom = async () => {
+    setIsLoading(true)
+    new Promise(resolve => {
+      setTimeout(resolve, 4000 * Math.random());
+    }).then(() => {
+      setIsLoading(false)
+    })
+  }
+  React.useEffect(() => {
+    (async () => {
+      let user = await GoogleSignIn.signInSilentlyAsync()
+      setGoogleUser(user)
+      setRoomName('Room by ' + user?.displayName)
+    })()
+  }, [])
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Create game</Text>
+      <View>
+        {!isLoading ?
+        <View style={{flexDirection: "column", alignItems: 'center', justifyContent: "space-evenly"}}>
+          <View style={{margin: 5}}>
+            <Text>Room name:</Text>
+            <TextInput onChangeText={text => setRoomName(text)} value={roomName} style={{ borderColor: 'gray', borderWidth: 1, height: 40, minWidth: '50%' }} />
+          </View>
+          <View style={{margin: 5}}>
+            <Button title="Create room" onPress={createRoom} />
+          </View>
+        </View>
+        :
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text>Waiting for player</Text>
+        </View>
+        }
+      </View>
+      <View>
+        <View style={{margin: 2}}>
+          <Button title="Back" onPress={() => navigation.navigate("Welcome")} />
+        </View>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  separator: {
+    marginVertical: 30,
+    height: 1,
+    width: '80%',
+  },
+});
