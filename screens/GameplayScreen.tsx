@@ -29,7 +29,7 @@ const Cell = (props) => {
         setSelectionColor('#0e0')
         break
       case GamerStatus.Lose:
-        setSelectionColor('#e00')
+        setSelectionColor('#ee0')
         break
       default:
         setSelectionColor('#eee')
