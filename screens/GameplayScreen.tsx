@@ -17,9 +17,7 @@ export default function GameplayScreen() {
     setIsMyTurn(!isMyTurn)
   }
   React.useEffect(() => {
-    GoogleSignIn.signInSilentlyAsync().then((user) => {
-      setGoogleUser(user)
-    })
+    GoogleSignIn.signInSilentlyAsync().then(setGoogleUser)
     setBoardMap({
       size: 3,
       cells: [

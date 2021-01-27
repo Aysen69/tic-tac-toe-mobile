@@ -5,32 +5,20 @@ import * as GoogleSignIn from 'expo-google-sign-in';
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
+import { Network, SimpleRoom } from '../models/Network';
 
 export default function FindGameScreen() {
   const navigation = useNavigation()
   const [googleUser, setGoogleUser] = React.useState<GoogleSignIn.GoogleUser | null>(null)
-  const [rooms, setRooms] = React.useState<any[]>([])
-  const [selectedRoom, setSelectedRoom] = React.useState<any[]>([])
+  const [rooms, setRooms] = React.useState<SimpleRoom[]>([])
+  const [selectedRoom, setSelectedRoom] = React.useState<SimpleRoom>()
   const [isRoomListLoading, setIsRoomListLoading] = React.useState(false)
   const [isConnectingToRoomLoading, setIsConnectingToRoomLoading] = React.useState(false)
-  const signInSilentlyAsync = async () => {
-    const user = await GoogleSignIn.signInSilentlyAsync()
-    setGoogleUser(user)
-  }
-  const getRooms = async () => {
+  const getRooms = () => {
     setIsRoomListLoading(true)
-    let rooms: any[] = []
-    for (let i = 0; i < 10 * Math.random(); i++) {
-      rooms.push({id: i + '', name: "room " + i})
-    }
-    new Promise(resolve => {
-      setTimeout(resolve, 2000 * Math.random());
-    }).then(() => {
-      setIsRoomListLoading(false)
-      setRooms(rooms)
-    })
+    Network.getRooms()
   }
-  const joinToRoom = async (room: any) => {
+  const joinToRoom = (room: SimpleRoom) => {
     setSelectedRoom(room)
     setIsConnectingToRoomLoading(true)
     new Promise(resolve => {
@@ -40,7 +28,11 @@ export default function FindGameScreen() {
     })
   }
   React.useEffect(() => {
-    signInSilentlyAsync()
+    GoogleSignIn.signInSilentlyAsync().then(setGoogleUser)
+    Network.onGetRooms((rooms: SimpleRoom[]) => {
+      setRooms(rooms)
+      setIsRoomListLoading(false)
+    })
     getRooms()
   }, [])
   return (
@@ -52,7 +44,7 @@ export default function FindGameScreen() {
           {!isConnectingToRoomLoading ?
             <Text>Loading rooms...</Text>
           :
-            <Text>Connecting to room "{selectedRoom.name}"...</Text>
+            <Text>Connecting to room "{selectedRoom?.name}"...</Text>
           }
         </View>
       :

@@ -5,27 +5,24 @@ import * as GoogleSignIn from 'expo-google-sign-in';
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { TextInput } from 'react-native-gesture-handler';
+import { Network, SimpleRoom } from '../models/Network';
 
 export default function CreateGameScreen() {
   const navigation = useNavigation()
   const [googleUser, setGoogleUser] = React.useState<GoogleSignIn.GoogleUser | null>(null)
   const [isLoading, setIsLoading] = React.useState(false)
-  const [roomName, setRoomName] = React.useState<string | undefined>(undefined)
-  const createRoom = async () => {
+  const [roomName, setRoomName] = React.useState<string>('Room ' + 100 * Math.random())
+  const createRoom = () => {
     setIsLoading(true)
-    new Promise(resolve => {
-      setTimeout(resolve, 4000 * Math.random());
-    }).then(() => {
-      setIsLoading(false)
-    })
+    Network.createRoom(googleUser?.displayName ? googleUser.displayName : 'noname ' + 100 * Math.random(), roomName)
   }
+  Network.onCreateRoom((room: SimpleRoom) => setIsLoading(false))
   React.useEffect(() => {
-    (async () => {
-      let user = await GoogleSignIn.signInSilentlyAsync()
-      setGoogleUser(user)
-      setRoomName('Room by ' + user?.displayName)
-    })()
+    GoogleSignIn.signInSilentlyAsync().then(setGoogleUser)
   }, [])
+  React.useEffect(() => {
+    setRoomName('Room by ' + googleUser?.displayName)
+  }, [googleUser])
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create game</Text>

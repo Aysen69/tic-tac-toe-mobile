@@ -3,23 +3,26 @@ import { Button, StyleSheet } from 'react-native';
 import * as GoogleSignIn from 'expo-google-sign-in';
 
 import { Text, View } from '../components/Themed';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const GoogleButton = () => {
   const navigation = useNavigation()
   const goToWelcome = () => navigation.navigate('Welcome')
-  const signInAsync = async () => {
+  const signInAsync = () => {
     try {
-      await GoogleSignIn.askForPlayServicesAsync();
-      const authResult: GoogleSignIn.GoogleSignInAuthResult = await GoogleSignIn.signInAsync();
-      if (authResult.type === 'success') goToWelcome()
+      GoogleSignIn.askForPlayServicesAsync().then(() => {
+        GoogleSignIn.signInAsync().then((authResult) => {
+          if (authResult.type === 'success') goToWelcome()
+        })
+      })
     } catch ({ message }) {
       alert('login: Error:' + message);
     }
   }
-  const signInSilentlyAsync = async () => {
-    const user = await GoogleSignIn.signInSilentlyAsync()
-    if (user) goToWelcome()
+  const signInSilentlyAsync = () => {
+    GoogleSignIn.signInSilentlyAsync().then((user) => {
+      if (user) goToWelcome()
+    })
   }
   React.useEffect(() => {
     signInSilentlyAsync()

@@ -1,29 +1,25 @@
 import * as React from 'react';
 import { Button, StyleSheet } from 'react-native';
 import * as GoogleSignIn from 'expo-google-sign-in';
-
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 
 export default function WelcomeScreen() {
   const navigation = useNavigation()
   const [googleUser, setGoogleUser] = React.useState<GoogleSignIn.GoogleUser | null>(null)
-  const signInSilentlyAsync = async () => {
-    const user = await GoogleSignIn.signInSilentlyAsync()
-    setGoogleUser(user)
+  const logOut = () => {
+    GoogleSignIn.signOutAsync().then(() => {
+      navigation.navigate("Auth")
+    })
   }
-  const logOut = async () => {
-    await GoogleSignIn.signOutAsync()
-    navigation.navigate("Auth")
-  }
-  const findGame = async () => {
+  const findGame = () => {
     navigation.navigate("FindGame")
   }
-  const createGame = async () => {
+  const createGame = () => {
     navigation.navigate("CreateGame")
   }
   React.useEffect(() => {
-    signInSilentlyAsync()
+    GoogleSignIn.signInSilentlyAsync().then(setGoogleUser)
   }, [])
   return (
     <View style={styles.container}>
