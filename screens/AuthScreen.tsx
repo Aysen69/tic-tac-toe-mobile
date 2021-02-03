@@ -1,43 +1,23 @@
 import * as React from 'react';
-import { Button, StyleSheet } from 'react-native';
-import * as GoogleSignIn from 'expo-google-sign-in';
+import { StyleSheet } from 'react-native';
 
 import { Text, View } from '../components/Themed';
+import { SignInWithGoogle } from '../components/SignInWithGoogle';
 import { useNavigation } from '@react-navigation/native';
-
-const GoogleButton = () => {
-  const navigation = useNavigation()
-  const goToWelcome = () => navigation.navigate('Welcome')
-  const signInAsync = () => {
-    try {
-      GoogleSignIn.askForPlayServicesAsync().then(() => {
-        GoogleSignIn.signInAsync().then((authResult) => {
-          if (authResult.type === 'success') goToWelcome()
-        })
-      })
-    } catch ({ message }) {
-      alert('login: Error:' + message);
-    }
-  }
-  const signInSilentlyAsync = () => {
-    GoogleSignIn.signInSilentlyAsync().then((user) => {
-      if (user) goToWelcome()
-    })
-  }
-  React.useEffect(() => {
-    signInSilentlyAsync()
-  })
-  return <Button onPress={signInAsync} title="Sign in with Google"/>
-}
+import { AuthMethod } from '../models/Auth';
 
 export default function AuthScreen() {
+  const navigation = useNavigation()
+  const onSuccessSignIn = (nickname: string, authMethod: AuthMethod) => {
+    navigation.navigate('Welcome', { nickname: nickname, authMethod: authMethod })
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Authorization</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <GoogleButton />
+      <SignInWithGoogle onSuccess={onSuccessSignIn} />
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({

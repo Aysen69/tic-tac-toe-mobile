@@ -1,33 +1,34 @@
 import * as React from 'react';
 import { Button, StyleSheet } from 'react-native';
-import * as GoogleSignIn from 'expo-google-sign-in';
+
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
+import { Auth, AuthMethod } from '../models/Auth';
 
-export default function WelcomeScreen() {
+type RouteParams = {
+  nickname: string,
+  authMethod: AuthMethod,
+}
+
+export default function WelcomeScreen({ route }: { route: { params: RouteParams } }) {
   const navigation = useNavigation()
-  const [googleUser, setGoogleUser] = React.useState<GoogleSignIn.GoogleUser | null>(null)
   const logOut = () => {
-    GoogleSignIn.signOutAsync().then(() => {
+    Auth.signOutAsync(route.params.authMethod).then(() => {
       navigation.navigate("Auth")
     })
   }
   const findGame = () => {
-    navigation.navigate("FindGame")
+    navigation.navigate("FindGame", { nickname: route.params.nickname })
   }
   const createGame = () => {
-    navigation.navigate("CreateGame")
+    navigation.navigate("CreateGame", { nickname: route.params.nickname })
   }
-  React.useEffect(() => {
-    GoogleSignIn.signInSilentlyAsync().then(setGoogleUser)
-  }, [])
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome, {googleUser?.displayName}</Text>
+      <Text style={styles.title}>Welcome, {route.params.nickname}</Text>
       <View>
         <View style={{ marginVertical: 10 }}><Button title="Find game" onPress={findGame} /></View>
         <View style={{ marginVertical: 10 }}><Button title="Create game" onPress={createGame} /></View>
-        <View style={{ marginVertical: 10 }}><Button title="gameplay" onPress={() => { navigation.navigate("Gameplay") }} /></View>
       </View>
       <Button title="Logout" onPress={logOut} />
     </View>

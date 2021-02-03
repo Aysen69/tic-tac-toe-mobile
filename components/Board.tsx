@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Dimensions } from 'react-native';
 import { View } from './Themed';
-import { Cell, CellType } from './Cell'
+import { Cell } from './Cell'
+import { CellType } from '../models/DuplexTypes'
 
 export type BoardMap = {
   size: number
@@ -10,7 +11,7 @@ export type BoardMap = {
 
 export type BoardProps = {
   boardMap: BoardMap | undefined
-  takeTurn: CallableFunction
+  takeTurn: (x: number, y: number) => void
 }
 
 export function Board(props: BoardProps) {

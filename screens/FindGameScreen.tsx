@@ -1,15 +1,19 @@
 import * as React from 'react';
 import { ActivityIndicator, Button, StyleSheet } from 'react-native';
-import * as GoogleSignIn from 'expo-google-sign-in';
 
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
-import { Network, SimpleRoom } from '../models/Network';
+import { SimpleRoom, SimplePlayer } from '../models/DuplexTypes';
+import { Network } from '../models/Network';
 
-export default function FindGameScreen() {
+type RouteParams = {
+  nickname: string
+}
+
+export default function FindGameScreen({ route }: { route: { params: RouteParams } }) {
   const navigation = useNavigation()
-  const [googleUser, setGoogleUser] = React.useState<GoogleSignIn.GoogleUser | null>(null)
+  let nickname = route.params.nickname
   const [rooms, setRooms] = React.useState<SimpleRoom[]>([])
   const [selectedRoom, setSelectedRoom] = React.useState<SimpleRoom>()
   const [isRoomListLoading, setIsRoomListLoading] = React.useState(false)
@@ -21,19 +25,32 @@ export default function FindGameScreen() {
   const joinToRoom = (room: SimpleRoom) => {
     setSelectedRoom(room)
     setIsConnectingToRoomLoading(true)
-    new Promise(resolve => {
-      setTimeout(resolve, 2000 * Math.random());
-    }).then(() => {
-      setIsConnectingToRoomLoading(false)
-    })
+    Network.joinToRoom(nickname, room.id)
   }
+  let isMounted = false
   React.useEffect(() => {
-    GoogleSignIn.signInSilentlyAsync().then(setGoogleUser)
+    isMounted = true
     Network.onGetRooms((rooms: SimpleRoom[]) => {
-      setRooms(rooms)
-      setIsRoomListLoading(false)
+      if (isMounted) {
+        setRooms(rooms)
+        setIsRoomListLoading(false)
+      }
+    })
+    Network.onJoinToRoom((join: { room: SimpleRoom, you: SimplePlayer, enemy: SimplePlayer }) => {
+      if (isMounted) {
+        setIsConnectingToRoomLoading(false)
+        navigation.navigate('Gameplay', {
+          room: join.room,
+          you: join.you,
+          enemy: join.enemy
+        })
+      }
     })
     getRooms()
+
+    return () => {
+      isMounted = false
+    }
   }, [])
   return (
     <View style={styles.container}>

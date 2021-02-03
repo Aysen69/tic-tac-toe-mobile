@@ -1,31 +1,14 @@
 import * as React from 'react';
 import { Text, View } from '../components/Themed';
 import { Entypo } from '@expo/vector-icons';
-
-export enum CellContain {
-  Cross,
-  Circle,
-  Nothing
-}
-
-export enum BgColor {
-  Win,
-  Lose,
-  Nothing
-}
-
-export type CellType = {
-  cellContain: CellContain,
-  isSelected: boolean,
-  bgColor: BgColor
-}
+import { CellContain, CellType, BgColor } from '../models/DuplexTypes';
 
 export type CellProps = {
   x: number
   y: number
   windowSize: number
   size: number | undefined
-  takeTurn: CallableFunction
+  takeTurn: (x: number, y: number) => void
   cellType: CellType
 }
 
@@ -63,7 +46,7 @@ export function Cell(props: CellProps) {
       onTouchEnd={() => { takeTurn(props.x, props.y) }}>
       <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: 'blue' }}>
         {props.cellType!.cellContain == CellContain.Cross && <Entypo name="cross" size={24} color="red" />}
-        {props.cellType!.cellContain == CellContain.Circle && <Entypo name="circle" size={18} color="blue" />}
+        {props.cellType!.cellContain == CellContain.Nought && <Entypo name="circle" size={18} color="blue" />}
       </Text>
     </View>
   )

@@ -1,10 +1,5 @@
 import { io, Socket } from 'socket.io-client'
 
-export type SimpleRoom = {
-  id: string
-  name: string
-}
-
 export class Network {
   private static _socket: Socket
 
@@ -15,51 +10,93 @@ export class Network {
     }
   }
 
-  public static getSocket()
-  {
-    Network._start()
-    return Network._socket
-  }
-
   public static onConnect(onConnect: Function)
   {
     Network._start()
     Network._socket.on('connect', onConnect)
-    return this
   }
 
   public static connect()
   {
     Network._start()
     Network._socket.connect()
-    return this
   }
 
   public static onCreateRoom(onCreateRoom: Function)
   {
     Network._start()
     Network._socket.on('createdRoom', onCreateRoom)
-    return this
   }
 
-  public static createRoom(nickname: string, roomName: string)
+  public static createRoom(nickname: string, roomName: string, mapSize: number, markCount: number)
   {
     Network._start()
-    Network._socket.emit('createRoom', nickname, roomName)
-    return this
+    Network._socket.emit('createRoom', nickname, roomName, mapSize, markCount)
   }
 
   public static onGetRooms(onGetRooms: Function)
   {
     Network._start()
     Network._socket.on('rooms', onGetRooms)
-    return this
   }
 
   public static getRooms()
   {
     Network._start()
     Network._socket.emit('getRooms')
-    return this
+  }
+
+  public static onJoinToRoom(onJoinToRoom: Function)
+  {
+    Network._start()
+    Network._socket.on('youJoinedToTheRoom', onJoinToRoom)
+  }
+
+  public static onSomeoneJoinedToYourRoom(onSomeoneJoinedToYourRoom: Function)
+  {
+    Network._start()
+    Network._socket.on('someoneJoinedToYourRoom', onSomeoneJoinedToYourRoom)
+  }
+
+  public static joinToRoom(nickname: string, roomId: string)
+  {
+    Network._start()
+    Network._socket.emit('joinToRoom', nickname, roomId)
+  }
+
+  public static onGetTiles(onGetTiles: Function)
+  {
+    Network._start()
+    Network._socket.on('tiles', onGetTiles)
+  }
+
+  public static getTiles(roomId: string)
+  {
+    Network._start()
+    Network._socket.emit('getTiles', roomId)
+  }
+
+  public static onTurnOf(onTurnOf: Function)
+  {
+    Network._start()
+    Network._socket.on('turnOf', onTurnOf)
+  }
+
+  public static onGameOver(onGameOver: Function)
+  {
+    Network._start()
+    Network._socket.on('gameOver', onGameOver)
+  }
+
+  public static takeTurn(playerId: string, roomId: string, x: number, y: number)
+  {
+    Network._start()
+    Network._socket.emit('takeTurn', playerId, roomId, x, y)
+  }
+
+  public static surrender(playerId: string, roomId: string)
+  {
+    Network._start()
+    Network._socket.emit('surrender', playerId, roomId)
   }
 }

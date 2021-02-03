@@ -1,28 +1,42 @@
 import * as React from 'react';
 import { ActivityIndicator, Button, StyleSheet } from 'react-native';
-import * as GoogleSignIn from 'expo-google-sign-in';
 
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { TextInput } from 'react-native-gesture-handler';
-import { Network, SimpleRoom } from '../models/Network';
+import { Network } from '../models/Network';
+import { SimpleRoom } from '../models/DuplexTypes';
+import NumericInput from 'react-native-numeric-input';
 
-export default function CreateGameScreen() {
+type RouteParams = {
+  nickname: string
+}
+
+export default function CreateGameScreen({ route }: { route: { params: RouteParams } }) {
   const navigation = useNavigation()
-  const [googleUser, setGoogleUser] = React.useState<GoogleSignIn.GoogleUser | null>(null)
+  let nickname = route.params.nickname
   const [isLoading, setIsLoading] = React.useState(false)
-  const [roomName, setRoomName] = React.useState<string>('Room ' + 100 * Math.random())
+  const [roomName, setRoomName] = React.useState<string>('Room ' + (100 * Math.random()))
+  const [mapSize, setMapSize] = React.useState(3)
+  const [markCount, setMarkCount] = React.useState(3)
   const createRoom = () => {
     setIsLoading(true)
-    Network.createRoom(googleUser?.displayName ? googleUser.displayName : 'noname ' + 100 * Math.random(), roomName)
+    Network.createRoom(nickname, roomName, mapSize, markCount)
   }
-  Network.onCreateRoom((room: SimpleRoom) => setIsLoading(false))
+  let isMounted = false
   React.useEffect(() => {
-    GoogleSignIn.signInSilentlyAsync().then(setGoogleUser)
+    isMounted = true
+    setRoomName('Room by ' + nickname)
+    Network.onCreateRoom((room: SimpleRoom) => {
+      if (isMounted) {
+        setIsLoading(false)
+      }
+    })
+
+    return () => {
+      isMounted = false
+    }
   }, [])
-  React.useEffect(() => {
-    setRoomName('Room by ' + googleUser?.displayName)
-  }, [googleUser])
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create game</Text>
@@ -32,6 +46,14 @@ export default function CreateGameScreen() {
           <View style={{margin: 5}}>
             <Text>Room name:</Text>
             <TextInput onChangeText={text => setRoomName(text)} value={roomName} style={{ borderColor: 'gray', borderWidth: 1, height: 40, minWidth: '50%' }} />
+          </View>
+          <View style={{margin: 5}}>
+            <Text>Map size: {mapSize}x{mapSize}</Text>
+            <NumericInput onChange={value => setMapSize(value)} value={mapSize} minValue={3} maxValue={20} />
+          </View>
+          <View style={{margin: 5}}>
+            <Text>Mark count to win: {markCount}</Text>
+            <NumericInput onChange={value => setMarkCount(value)} value={markCount} minValue={3} maxValue={mapSize} />
           </View>
           <View style={{margin: 5}}>
             <Button title="Create room" onPress={createRoom} />
