@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Button, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
-import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
+import { FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Text, View } from '../components/Themed';
 import { Auth, AuthMethod } from '../models/Auth';
 
 type RouteParams = {
@@ -27,10 +28,20 @@ export default function WelcomeScreen({ route }: { route: { params: RouteParams 
     <View style={styles.container}>
       <Text style={styles.title}>Welcome, {route.params.nickname}</Text>
       <View>
-        <View style={{ marginVertical: 10 }}><Button title="Find game" onPress={findGame} /></View>
-        <View style={{ marginVertical: 10 }}><Button title="Create game" onPress={createGame} /></View>
+        <View style={{ marginVertical: 10 }}>
+          <Pressable style={{ padding: 8, backgroundColor: '#0099ff' }} onPress={findGame}>
+            <Text style={{ color: '#fff', textTransform: 'uppercase' }}><FontAwesome name="search" size={16} color="white" /> Find game</Text>
+          </Pressable>
+        </View>
+        <View style={{ marginVertical: 10 }}>
+          <Pressable style={{ padding: 8, backgroundColor: '#0099ff' }} onPress={createGame}>
+            <Text style={{ color: '#fff', textTransform: 'uppercase' }}><FontAwesome name="plus-circle" size={16} color="white" /> Create game</Text>
+          </Pressable>
+        </View>
       </View>
-      <Button title="Logout" onPress={logOut} />
+      <Pressable style={{ padding: 8, backgroundColor: '#0099ff' }} onPress={logOut}>
+        <Text style={{ color: '#fff', textTransform: 'uppercase' }}><MaterialCommunityIcons name="logout" size={16} color="white" /> Logout</Text>
+      </Pressable>
     </View>
   );
 }

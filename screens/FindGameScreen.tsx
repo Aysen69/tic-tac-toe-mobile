@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { ActivityIndicator, Button, StyleSheet } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import { SimpleRoom, SimplePlayer } from '../models/DuplexTypes';
 import { Network } from '../models/Network';
+import { FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 type RouteParams = {
   nickname: string
@@ -69,10 +70,24 @@ export default function FindGameScreen({ route }: { route: { params: RouteParams
           data={rooms}
           renderItem={({ item, index }) => {
             return (
-              <View style={{margin: 2, flexDirection: "row", justifyContent: "space-evenly",}}>
-                <Text style={{color: 'black'}}>{item.name}</Text>
+              <View style={{margin: 2, flexDirection: 'row', justifyContent: 'space-evenly'}}>
                 <View>
-                  <Button title="join" onPress={(item) => { joinToRoom(rooms[index]) } } />
+                  <View style={{margin: 2}}>
+                    <Text style={{ color: 'black' }}>{item.name}</Text>
+                  </View>
+                  <View style={{margin: 2, flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                    <View>
+                      <Text style={{ backgroundColor: 'orange' }}>[ {item.mapSize}x{item.mapSize} ]</Text>
+                    </View>
+                    <View>
+                      <Text style={{ backgroundColor: 'orange' }}>[ marks: {item.markCount} ]</Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                  <Pressable style={{ padding: 8, backgroundColor: '#0099ff' }} onPress={(item) => { joinToRoom(rooms[index]) }}>
+                    <Text style={{ color: '#fff', textTransform: 'uppercase' }}><MaterialCommunityIcons name="login" size={16} color="white" /> join</Text>
+                  </Pressable>
                 </View>
               </View>
             )
@@ -81,16 +96,18 @@ export default function FindGameScreen({ route }: { route: { params: RouteParams
         />
       }
       <View>
-        {!isRoomListLoading &&
-          <Text>Found {rooms.length} room(s)</Text>
-        }
+        {!isRoomListLoading && <Text>Found {rooms.length} room(s)</Text>}
       </View>
       <View>
         <View style={{margin: 2}}>
-          <Button title="Refresh" onPress={getRooms} />
+          <Pressable style={{ padding: 8, backgroundColor: '#0099ff' }} onPress={getRooms}>
+            <Text style={{ color: '#fff', textTransform: 'uppercase' }}><FontAwesome name="refresh" size={16} color="white" /> Refresh</Text>
+          </Pressable>
         </View>
         <View style={{margin: 2}}>
-          <Button title="Back" onPress={() => navigation.navigate("Welcome")} />
+          <Pressable style={{ padding: 8, backgroundColor: '#0099ff' }} onPress={() => navigation.navigate("Welcome")}>
+            <Text style={{ color: '#fff', textTransform: 'uppercase' }}><Ionicons name="caret-back-circle" size={16} color="white" /> Back</Text>
+          </Pressable>
         </View>
       </View>
     </View>

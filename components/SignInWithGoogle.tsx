@@ -1,5 +1,6 @@
+import { FontAwesome } from '@expo/vector-icons';
 import * as React from 'react';
-import { Button } from 'react-native';
+import { Text, Pressable } from 'react-native';
 import { Auth, AuthMethod, AuthSignInRejectionReason } from '../models/Auth';
 
 type SignInWithGoogleProps = {
@@ -24,5 +25,9 @@ export const SignInWithGoogle = (props: SignInWithGoogleProps) => {
       }
     )
   }
-  return <Button onPress={signInAsync} title="Sign in with Google"/>
+  return (
+    <Pressable style={{ padding: 8, backgroundColor: '#0099ff' }} onPress={signInAsync}>
+      <Text style={{ color: '#fff' }}><FontAwesome name="google" size={16} color="white" /> Sign in with Google</Text>
+    </Pressable>
+  )
 }

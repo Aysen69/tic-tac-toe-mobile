@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActivityIndicator, Button, StyleSheet } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import { Network } from '../models/Network';
 import { SimpleRoom } from '../models/DuplexTypes';
 import NumericInput from 'react-native-numeric-input';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 
 type RouteParams = {
   nickname: string
@@ -56,7 +57,9 @@ export default function CreateGameScreen({ route }: { route: { params: RoutePara
             <NumericInput onChange={value => setMarkCount(value)} value={markCount} minValue={3} maxValue={mapSize} />
           </View>
           <View style={{margin: 5}}>
-            <Button title="Create room" onPress={createRoom} />
+            <Pressable style={{ padding: 8, backgroundColor: '#0099ff' }} onPress={createRoom}>
+              <Text style={{ color: '#fff', textTransform: 'uppercase' }}><FontAwesome name="plus-circle" size={16} color="white" /> Create room</Text>
+            </Pressable>
           </View>
         </View>
         :
@@ -68,7 +71,9 @@ export default function CreateGameScreen({ route }: { route: { params: RoutePara
       </View>
       <View>
         <View style={{margin: 2}}>
-          <Button title="Back" onPress={() => navigation.navigate("Welcome")} />
+          <Pressable style={{ padding: 8, backgroundColor: '#0099ff' }} onPress={() => navigation.navigate("Welcome")}>
+            <Text style={{ color: '#fff', textTransform: 'uppercase' }}><Ionicons name="caret-back-circle" size={16} color="white" /> Back</Text>
+          </Pressable>
         </View>
       </View>
     </View>

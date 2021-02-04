@@ -87,3 +87,6 @@ buck-out/
 web-build/
 
 # @end expo-cli
+
+#vscode
+.vscode

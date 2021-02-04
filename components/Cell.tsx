@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Text, View } from '../components/Themed';
 import { Entypo } from '@expo/vector-icons';
 import { CellContain, CellType, BgColor } from '../models/DuplexTypes';
+import Emoji from 'react-native-emoji';
 
 export type CellProps = {
   x: number
@@ -30,14 +31,16 @@ export function Cell(props: CellProps) {
   const takeTurn = (x: number, y: number) => {
     props.takeTurn(x, y)
   }
+  const _width = props.windowSize / props.size!
+  const _iconSize = _width * 0.6
   React.useEffect(() => {
     setBgColorByEnum()
   }, [props.cellType!.bgColor])
   return (
     <View
       style={{
-        width: props.windowSize / props.size!,
-        height: props.windowSize / props.size!,
+        width: _width,
+        height: _width,
         backgroundColor: bgColor,
         borderWidth: 1,
         borderColor: 'white',
@@ -45,8 +48,8 @@ export function Cell(props: CellProps) {
       }}
       onTouchEnd={() => { takeTurn(props.x, props.y) }}>
       <Text style={{ textAlign: 'center', textAlignVertical: 'center', color: 'blue' }}>
-        {props.cellType!.cellContain == CellContain.Cross && <Entypo name="cross" size={24} color="red" />}
-        {props.cellType!.cellContain == CellContain.Nought && <Entypo name="circle" size={18} color="blue" />}
+        {props.cellType!.cellContain == CellContain.Cross && <Emoji name=":smiling_imp:" style={{fontSize: _iconSize}} />}
+        {props.cellType!.cellContain == CellContain.Nought && <Emoji name=":innocent:" style={{fontSize: _iconSize}} />}
       </Text>
     </View>
   )

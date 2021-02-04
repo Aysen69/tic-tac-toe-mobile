@@ -18,9 +18,9 @@ export default function GameplayScreen({ route }: { route: { params: RouteParams
   const [isMyTurn, setIsMyTurn] = React.useState<boolean | undefined>()
   const [boardMap, setBoardMap] = React.useState<BoardMap | undefined>()
   const [isGameOver, setIsGameOver] = React.useState(false)
-  let room: SimpleRoom = route.params.room;
-  let me: SimplePlayer = route.params.you;
-  let enemy: SimplePlayer = route.params.enemy;
+  let room: SimpleRoom = route.params.room
+  let me: SimplePlayer = route.params.you
+  let enemy: SimplePlayer = route.params.enemy
   const takeTurn = (x: number, y: number) => {
     Network.takeTurn(me.id, room.id, x, y)
   }
@@ -97,11 +97,31 @@ export default function GameplayScreen({ route }: { route: { params: RouteParams
   }, [])
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{enemy.nickname} (opponent)</Text>
-      <Text>{ isMyTurn === false && 'Turn of enemy' }</Text>
+      <View style={{ flexDirection: 'row' }}>
+        <View>
+          <Text>{room.name} </Text>
+        </View>
+        <View style={{marginLeft: 5}}>
+          <Text style={{ backgroundColor: 'orange' }}>[ {room.mapSize}x{room.mapSize} ]</Text>
+        </View>
+        <View style={{marginLeft: 5}}>
+          <Text style={{ backgroundColor: 'orange' }}>[ marks: {room.markCount} ]</Text>
+        </View>
+      </View>
+      <View style={{flexDirection: 'row'}}>
+        <View style={{backgroundColor: isMyTurn ? '#99ff00' : '#fff'}}>
+          <Text style={styles.title}>{me.nickname}</Text>
+        </View>
+        <View>
+          <Text> vs </Text>
+        </View>
+        <View style={{backgroundColor: !isMyTurn ? '#99ff00' : '#fff'}}>
+          <Text style={styles.title}>{enemy.nickname}</Text>
+        </View>
+      </View>
+      <Text style={styles.title}>{ isMyTurn === false && 'Turn of enemy' }</Text>
       {boardMap && <Board boardMap={boardMap} takeTurn={takeTurn} />}
-      <Text>{ isMyTurn === true && 'Your turn' }</Text>
-      <Text style={styles.title}>{me.nickname} (you)</Text>
+      <Text style={styles.title}>{ isMyTurn === true && 'Your turn' }</Text>
       <View>
         {!isGameOver ?
         <Button title="Surrender" onPress={surrender} color={'#FFC300'} />
