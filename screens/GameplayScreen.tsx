@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, Button, StyleSheet } from 'react-native';
+import { ActivityIndicator, Button, StyleSheet } from 'react-native';
 
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
@@ -127,7 +127,11 @@ export default function GameplayScreen({ route }: { route: { params: RouteParams
         </View>
       </View>
       <Text style={styles.title}>{ isMyTurn === false && 'Turn of enemy' }</Text>
-      {boardMap && <Board boardMap={boardMap} takeTurn={takeTurn} />}
+      {boardMap ?
+      <Board boardMap={boardMap} takeTurn={takeTurn} />
+      :
+      <ActivityIndicator size="large" color="#0000ff" />
+      }
       <Text style={styles.title}>{ isMyTurn === true && 'Your turn' }</Text>
       <View>
         {!isGameOver ?
