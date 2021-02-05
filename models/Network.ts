@@ -18,6 +18,12 @@ export class Network {
     Network._socket.on('connect', onConnect)
   }
 
+  public static onDisconnect(onDisconnect: () => void)
+  {
+    Network._start()
+    Network._socket.on('disconnect', onDisconnect)
+  }
+
   public static connect()
   {
     Network._start()
@@ -100,5 +106,17 @@ export class Network {
   {
     Network._start()
     Network._socket.emit('surrender', playerId, roomId)
+  }
+
+  public static onConnectError(onConnectError: (err: Error) => void)
+  {
+    Network._start()
+    Network._socket.on('connectError', onConnectError)
+  }
+
+  public static onRoomDisconnect(onRoomDisconnect: (reason: string) => void)
+  {
+    Network._start()
+    Network._socket.on('roomDisconnect', onRoomDisconnect)
   }
 }

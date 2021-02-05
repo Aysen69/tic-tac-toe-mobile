@@ -78,17 +78,24 @@ export default function GameplayScreen({ route }: { route: { params: RouteParams
         setIsGameOver(true)
         switch (me.gamerStatus) {
           case GamerStatus.Win:
-            Alert.alert("You win!")
+            alert("You win!")
             break;
           case GamerStatus.Lose:
-            Alert.alert("You lose")
+            alert("You lose")
             break;
           case GamerStatus.Draw:
-            Alert.alert("Draw")
+            alert("Draw")
             break;
         }
       }
     })
+    let onConnectionError = () => {
+      alert("Connection error")
+      navigation.navigate("Welcome")
+    }
+    Network.onConnectError((err: Error) => onConnectionError())
+    Network.onConnectError((err: Error) => onConnectionError())
+    Network.onDisconnect(() => onConnectionError())
     Network.getTiles(room.id)
 
     return () => {
