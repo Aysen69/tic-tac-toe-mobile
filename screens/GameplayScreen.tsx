@@ -90,8 +90,10 @@ export default function GameplayScreen({ route }: { route: { params: RouteParams
       }
     })
     let onConnectionError = () => {
-      alert("Connection error")
-      navigation.navigate("Welcome")
+      if (isMounted) {
+        alert("Connection error")
+        navigation.navigate("Welcome")
+      }
     }
     Network.onConnectError((err: Error) => onConnectionError())
     Network.onConnectError((err: Error) => onConnectionError())
