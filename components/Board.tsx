@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions } from 'react-native';
+import { ActivityIndicator, Dimensions } from 'react-native';
 import { View } from './Themed';
 import { Cell } from './Cell'
 import { CellType } from '../models/DuplexTypes'
@@ -27,7 +27,10 @@ export function Board(props: BoardProps) {
   }
   return (
     <View style={{ width: windowSize, height: windowSize, flexDirection: "column"}}>
-      {mapSize.map((y) =>
+      {
+      props.boardMap
+      ?
+      mapSize.map((y) =>
         <View key={'row_' + y} style={{ flexDirection: "row" }}>
           {mapSize.map((x) => (
             <Cell key={'cell_' + x + '_' + y}
@@ -39,7 +42,10 @@ export function Board(props: BoardProps) {
               cellType={props.boardMap!.cells[y][x]} />
           ))}
         </View>
-      )}
+      )
+      :
+      <ActivityIndicator size="large" color="#0000ff" />
+      }
     </View>
   )
 }
