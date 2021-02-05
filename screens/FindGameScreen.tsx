@@ -37,13 +37,13 @@ export default function FindGameScreen({ route }: { route: { params: RouteParams
         setIsRoomListLoading(false)
       }
     })
-    Network.onJoinToRoom((join: { room: SimpleRoom, you: SimplePlayer, enemy: SimplePlayer }) => {
+    Network.onJoinToRoom((joinInfo) => {
       if (isMounted) {
         setIsConnectingToRoomLoading(false)
         navigation.navigate('Gameplay', {
-          room: join.room,
-          you: join.you,
-          enemy: join.enemy
+          room: joinInfo.room,
+          you: joinInfo.you,
+          enemy: joinInfo.enemy
         })
       }
     })

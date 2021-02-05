@@ -13,15 +13,21 @@ type RouteParams = {
   nickname: string
 }
 
+enum CreateRoomStage {
+  Setup,
+  CreatingRoom,
+  WaitingForPlayer
+}
+
 export default function CreateGameScreen({ route }: { route: { params: RouteParams } }) {
   const navigation = useNavigation()
   let nickname = route.params.nickname
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [createRoomStage, setCreateRoomStage] = React.useState<CreateRoomStage>(CreateRoomStage.Setup)
   const [roomName, setRoomName] = React.useState<string>('Room ' + (100 * Math.random()))
   const [mapSize, setMapSize] = React.useState(3)
   const [markCount, setMarkCount] = React.useState(3)
   const createRoom = () => {
-    setIsLoading(true)
+    setCreateRoomStage(CreateRoomStage.CreatingRoom)
     Network.createRoom(nickname, roomName, mapSize, markCount)
   }
   let isMounted = false
@@ -30,8 +36,15 @@ export default function CreateGameScreen({ route }: { route: { params: RoutePara
     setRoomName('Room by ' + nickname)
     Network.onCreateRoom((room: SimpleRoom) => {
       if (isMounted) {
-        setIsLoading(false)
+        setCreateRoomStage(CreateRoomStage.WaitingForPlayer)
       }
+    })
+    Network.onSomeoneJoinedToYourRoom((joinInfo) => {
+      navigation.navigate('Gameplay', {
+        room: joinInfo.room,
+        you: joinInfo.you,
+        enemy: joinInfo.enemy
+      })
     })
 
     return () => {
@@ -42,7 +55,7 @@ export default function CreateGameScreen({ route }: { route: { params: RoutePara
     <View style={styles.container}>
       <Text style={styles.title}>Create game</Text>
       <View>
-        {!isLoading ?
+        {createRoomStage == CreateRoomStage.Setup ?
         <View style={{flexDirection: "column", alignItems: 'center', justifyContent: "space-evenly"}}>
           <View style={{margin: 5}}>
             <Text>Room name:</Text>
@@ -65,7 +78,8 @@ export default function CreateGameScreen({ route }: { route: { params: RoutePara
         :
         <View>
           <ActivityIndicator size="large" color="#0000ff" />
-          <Text>Waiting for player</Text>
+          {createRoomStage == CreateRoomStage.CreatingRoom && <Text>Creating room...</Text>}
+          {createRoomStage == CreateRoomStage.WaitingForPlayer && <Text>Waiting for player...</Text>}
         </View>
         }
       </View>
