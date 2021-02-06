@@ -7,9 +7,11 @@ export class Network {
   private static _start()
   {
     if (Network._socket === void 0) {
-      let prodUrl = 'http://185.228.232.184:3000'
-      let localUrl = 'http://10.1.0.1:3000'
-      Network._socket = io(__DEV__ ? localUrl : prodUrl)
+      let url = 'http://185.228.232.184:3000'
+      if (__DEV__) {
+        url = 'http://10.1.0.1:3000'
+      }
+      Network._socket = io(url)
     }
   }
 
