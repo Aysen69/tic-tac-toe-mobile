@@ -59,6 +59,12 @@
           <string>com.aysen69.tic-tac-toe-mobile</string>
         </array>
       </dict>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.googleusercontent.apps.102468389664-scdufcg7edbmquvbn1lneocugtdmfb3m</string>
+        </array>
+      </dict>
     </array>
     <key>UIRequiresFullScreen</key>
     <true/>
