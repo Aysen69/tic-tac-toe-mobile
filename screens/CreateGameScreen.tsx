@@ -79,7 +79,7 @@ export default function CreateGameScreen({ route }: { route: { params: RoutePara
         <View>
           <ActivityIndicator size="large" color="#0000ff" />
           {createRoomStage == CreateRoomStage.CreatingRoom && <Text>Creating room...</Text>}
-          {createRoomStage == CreateRoomStage.WaitingForPlayer && <Text>Waiting for player...</Text>}
+          {createRoomStage == CreateRoomStage.WaitingForPlayer && <Text>Waiting for opponent...</Text>}
         </View>
         }
       </View>
