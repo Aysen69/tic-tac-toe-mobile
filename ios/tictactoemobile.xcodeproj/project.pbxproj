@@ -15,6 +15,8 @@
 		96905EF65AED1B983A6B3ABC /* libPods-tictactoemobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-tictactoemobile.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		E7F0986B69224EC69D735D1B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8F78EB9453D24BF6B01336DC /* GoogleService-Info.plist */; };
+		87479917BF2542E5B5FFE365 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EBB978C6A138435295A3B3D3 /* GoogleService-Info.plist */; };
+		2E4EEBCCAC5744D79C7BCCAA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EFA25B76ED9648EAA458C7D2 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		8F78EB9453D24BF6B01336DC /* GoogleService-Info.plist */ = {isa = PBXFileReference; name = "GoogleService-Info.plist"; path = "tictactoemobile/GoogleService-Info.plist"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = text.plist.xml; explicitFileType = undefined; includeInIndex = 0; };
+		EBB978C6A138435295A3B3D3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; name = "GoogleService-Info.plist"; path = "tictactoemobile/GoogleService-Info.plist"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = text.plist.xml; explicitFileType = undefined; includeInIndex = 0; };
+		EFA25B76ED9648EAA458C7D2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; name = "GoogleService-Info.plist"; path = "tictactoemobile/GoogleService-Info.plist"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = text.plist.xml; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +65,8 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
 				8F78EB9453D24BF6B01336DC /* GoogleService-Info.plist */,
+				EBB978C6A138435295A3B3D3 /* GoogleService-Info.plist */,
+				EFA25B76ED9648EAA458C7D2 /* GoogleService-Info.plist */,
 			);
 			name = tictactoemobile;
 			sourceTree = "<group>";
@@ -187,6 +193,8 @@
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
 				E7F0986B69224EC69D735D1B /* GoogleService-Info.plist in Resources */,
+				87479917BF2542E5B5FFE365 /* GoogleService-Info.plist in Resources */,
+				2E4EEBCCAC5744D79C7BCCAA /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
