@@ -102,9 +102,7 @@ export default function GameplayScreen({ route }: { route: { params: RouteParams
 
     return () => {
       isMounted = false
-      if (isGameOver == false) {
-        Network.surrender(me.id, room.id)
-      }
+      if (isGameOver == false) surrender()
     }
   }, [])
   return (
