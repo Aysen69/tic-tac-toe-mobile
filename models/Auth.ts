@@ -1,7 +1,8 @@
 import * as GoogleSignIn from 'expo-google-sign-in';
 
 export enum AuthMethod {
-  Google
+  Google,
+  CustomNickname
 }
 
 export enum AuthSignInRejectionReason {
