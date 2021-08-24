@@ -79,7 +79,7 @@ export default function CreateGameScreen({ route }: { route: { params: RoutePara
         <View>
           <ActivityIndicator size="large" color="#0000ff" />
           {createRoomStage == CreateRoomStage.CreatingRoom && <Text>Creating room...</Text>}
-          {createRoomStage == CreateRoomStage.WaitingForPlayer && <Text>Waiting for opponent...</Text>}
+          {createRoomStage == CreateRoomStage.WaitingForPlayer && <View style={{ alignItems: 'center' }}><Text>Room "{roomName}" created!</Text><Text>Please, wait for your enemy joining to your room...</Text></View>}
         </View>
         }
       </View>
