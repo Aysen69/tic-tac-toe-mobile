@@ -30,27 +30,25 @@ export default function CreateGameScreen({ route }: { route: { params: RoutePara
     setCreateRoomStage(CreateRoomStage.CreatingRoom)
     Network.createRoom(nickname, roomName, mapSize, markCount)
   }
-  let isMounted = false
+  const onCreateRoom = (room: SimpleRoom) => {
+    setCreateRoomStage(CreateRoomStage.WaitingForPlayer)
+  }
+  const onSomeoneJoinedToYourRoom = (joinInfo: any) => {
+    navigation.navigate('Gameplay', {
+      room: joinInfo.room,
+      you: joinInfo.you,
+      enemy: joinInfo.enemy
+    })
+  }
   React.useEffect(() => {
-    isMounted = true
     setRoomName('Room by ' + nickname)
-    Network.onCreateRoom((room: SimpleRoom) => {
-      if (isMounted) {
-        setCreateRoomStage(CreateRoomStage.WaitingForPlayer)
-      }
-    })
-    Network.onSomeoneJoinedToYourRoom((joinInfo) => {
-      navigation.navigate('Gameplay', {
-        room: joinInfo.room,
-        you: joinInfo.you,
-        enemy: joinInfo.enemy
-      })
-    })
-
+    Network.subscribeOnCreateRoom(onCreateRoom)
+    Network.subscribeOnSomeoneJoinedToYourRoom(onSomeoneJoinedToYourRoom)
     return () => {
-      isMounted = false
+      Network.unsubscribeOnCreateRoom(onCreateRoom)
+      Network.unsubscribeOnSomeoneJoinedToYourRoom(onSomeoneJoinedToYourRoom)
     }
-  }, [])
+  }, [route.params])
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create game</Text>

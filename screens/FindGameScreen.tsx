@@ -4,7 +4,7 @@ import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
-import { SimpleRoom, SimplePlayer } from '../models/DuplexTypes';
+import { SimpleRoom } from '../models/DuplexTypes';
 import { Network } from '../models/Network';
 import { FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -28,31 +28,27 @@ export default function FindGameScreen({ route }: { route: { params: RouteParams
     setIsConnectingToRoomLoading(true)
     Network.joinToRoom(nickname, room.id)
   }
-  let isMounted = false
+  const onGetRooms = (rooms: SimpleRoom[]) => {
+    setRooms(rooms)
+    setIsRoomListLoading(false)
+  }
+  const onJoinToRoom = (joinInfo: any) => {
+    setIsConnectingToRoomLoading(false)
+    navigation.navigate('Gameplay', {
+      room: joinInfo.room,
+      you: joinInfo.you,
+      enemy: joinInfo.enemy
+    })
+  }
   React.useEffect(() => {
-    isMounted = true
-    Network.onGetRooms((rooms: SimpleRoom[]) => {
-      if (isMounted) {
-        setRooms(rooms)
-        setIsRoomListLoading(false)
-      }
-    })
-    Network.onJoinToRoom((joinInfo) => {
-      if (isMounted) {
-        setIsConnectingToRoomLoading(false)
-        navigation.navigate('Gameplay', {
-          room: joinInfo.room,
-          you: joinInfo.you,
-          enemy: joinInfo.enemy
-        })
-      }
-    })
+    Network.subscribeOnGetRooms(onGetRooms)
+    Network.subscribeOnJoinToRoom(onJoinToRoom)
     getRooms()
-
     return () => {
-      isMounted = false
+      Network.unsubscribeOnGetRooms(onGetRooms)
+      Network.unsubscribeOnJoinToRoom(onJoinToRoom) 
     }
-  }, [])
+  }, [route.params])
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Find game</Text>

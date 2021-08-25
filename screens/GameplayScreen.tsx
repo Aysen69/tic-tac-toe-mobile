@@ -55,56 +55,56 @@ export default function GameplayScreen({ route }: { route: { params: RouteParams
   const surrender = () => {
     Network.surrender(me.id, room.id)
   }
-  let isMounted = false
-  React.useEffect(() => {
-    isMounted = true
-    Network.onGetTiles((cells: Cell[][]) => {
-      if (isMounted) {
-        setBoardMap({
-          size: cells.length,
-          cells: _cellsToCellType(cells)
-        })
-      }
+  const onGetTiles = (cells: Cell[][]) => {
+    setBoardMap({
+      size: cells.length,
+      cells: _cellsToCellType(cells)
     })
-    Network.onTurnOf((playerId: string) => {
-      if (isMounted) {
-        setIsMyTurn(me.id == playerId)
-      }
-    })
-    Network.onGameOver((players: { you: SimplePlayer, enemy: SimplePlayer }) => {
-      if (isMounted) {
-        me = players.you
-        enemy = players.enemy
-        setIsGameOver(true)
-        switch (me.gamerStatus) {
-          case GamerStatus.Win:
-            alert("You win!")
-            break;
-          case GamerStatus.Lose:
-            alert("You lose")
-            break;
-          case GamerStatus.Draw:
-            alert("Draw")
-            break;
-        }
-      }
-    })
-    let onConnectionError = () => {
-      if (isMounted) {
-        alert("Connection error")
-        navigation.navigate("Welcome")
-      }
+  }
+  const onTurnOf = (playerId: string) => {
+    setIsMyTurn(me.id == playerId)
+  }
+  const onGameOver = (players: { you: SimplePlayer, enemy: SimplePlayer }) => {
+    me = players.you
+    enemy = players.enemy
+    setIsGameOver(true)
+    switch (me.gamerStatus) {
+      case GamerStatus.Win:
+        alert("You win!")
+        break;
+      case GamerStatus.Lose:
+        alert("You lose")
+        break;
+      case GamerStatus.Draw:
+        alert("Draw")
+        break;
     }
-    Network.onConnectError((err: Error) => onConnectionError())
-    Network.onConnectError((err: Error) => onConnectionError())
-    Network.onDisconnect(() => onConnectionError())
+  }
+  const onConnectionError = (err?: Error) => {
+    alert("Connection error. Trying to reconnect.")
+    Network.connect()
+  }
+  const onDisconnect = (err?: Error) => {
+    alert("Enemy disconnected")
+    navigation.navigate("Welcome")
+  }
+  React.useEffect(() => {
+    Network.subscribeOnGetTiles(onGetTiles)
+    Network.subscribeOnTurnOf(onTurnOf)
+    Network.subscribeOnGameOver(onGameOver)
+    Network.subscribeOnConnectError(onConnectionError)
+    Network.subscribeOnDisconnect(onDisconnect)
     Network.getTiles(room.id)
 
     return () => {
-      isMounted = false
       if (isGameOver == false) surrender()
+      Network.unsubscribeOnGetTiles(onGetTiles)
+      Network.unsubscribeOnTurnOf(onTurnOf)
+      Network.unsubscribeOnGameOver(onGameOver)
+      Network.unsubscribeOnConnectError(onConnectionError)
+      Network.unsubscribeOnDisconnect(onDisconnect)
     }
-  }, [])
+  }, [route.params.room.id])
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: 'row' }}>
@@ -129,13 +129,13 @@ export default function GameplayScreen({ route }: { route: { params: RouteParams
           <Text style={styles.title}>{enemy.nickname}</Text>
         </View>
       </View>
-      <Text style={styles.title}>{ isMyTurn === false && 'Turn of enemy' }</Text>
+      <Text style={styles.title}>{ isMyTurn === false && 'Enemy move' }</Text>
       {boardMap ?
       <Board boardMap={boardMap} takeTurn={takeTurn} />
       :
       <ActivityIndicator size="large" color="#0000ff" />
       }
-      <Text style={styles.title}>{ isMyTurn === true && 'Your turn' }</Text>
+      <Text style={styles.title}>{ isMyTurn === true && 'Your move' }</Text>
       <View>
         {!isGameOver ?
         <Button title="Surrender" onPress={surrender} color={'#FFC300'} />
