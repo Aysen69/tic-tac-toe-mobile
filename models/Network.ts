@@ -14,7 +14,7 @@ export class Network {
   public static connect()
   {
     if (Network._socket === void 0) {
-      let url = 'http://185.228.232.184:3000'
+      let url = 'http://143.198.183.146:3000'
       if (__DEV__) {
         url = 'http://10.1.0.1:3000'
       }
